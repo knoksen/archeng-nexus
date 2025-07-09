@@ -19,16 +19,8 @@ Then visit `http://localhost:8000` in your browser.
 
 ## Node Setup
 
-If you plan to use Node for dependency management, run:
+The repository does not include a Node.js application. `package.json` only defines a few optional scripts. There are no dependencies, so you can skip `npm install` or run it with the `--offline` flag if desired.
 
-```bash
-npm install
-```
-
-### Running Tests
-
-This project uses [Jest](https://jestjs.io/) for unit testing. After
-installing dependencies you can run all tests with:
 
 ```bash
 npm test
