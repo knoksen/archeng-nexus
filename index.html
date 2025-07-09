@@ -839,6 +839,14 @@
                         solutionsList.appendChild(item);
                     });
                 }
+            })
+            .catch(err => {
+                console.error('Failed to load site-info.json', err);
+                const msg = document.createElement('p');
+                msg.className = 'text-center text-red-600 mt-4';
+                msg.textContent = 'Failed to load dynamic content. Showing default information.';
+                const main = document.querySelector('main');
+                if (main) main.prepend(msg);
             });
     </script>
 </body>
