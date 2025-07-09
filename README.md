@@ -42,6 +42,9 @@ npm install
 npm start
 ```
 
+For CI environments, install dependencies with `npm ci` to ensure a clean
+and reproducible build.
+
 
 `npm start` launches `server/index.js` on port `3000`. Leave this process
 running while you test the site. Every time the contact form is submitted the
