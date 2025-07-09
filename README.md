@@ -6,13 +6,16 @@ At the bottom of the page you'll find a simple contact form. Visitors can use it
 
 ## Running Locally
 
-Open `index.html` directly in a browser or start a simple web server:
+This site uses the browser's `fetch` API to load data. Browsers block `fetch`
+requests when the page is opened with the `file://` scheme. Run a local server
+so the page is served over `http://` or `https://` instead of opening
+`index.html` directly:
 
 ```bash
 python3 -m http.server
 ```
 
-Then visit `http://localhost:8000`.
+Then visit `http://localhost:8000` in your browser.
 
 ## License
 
