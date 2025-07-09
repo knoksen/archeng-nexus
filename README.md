@@ -47,6 +47,24 @@ This uses Jest to verify the contact API responds correctly.
 Send a JSON payload with `name`, `email` and `message`. The server returns
 `{ "status": "ok" }` after logging the submission.
 
+## Deployment
+
+This repository includes a GitHub Actions workflow that deploys the static site
+to **GitHub Pages**. To enable it for your fork:
+
+1. Open your repository's **Settings** and navigate to **Pages**.
+2. Under **Build and deployment**, select **GitHub Actions** as the source and
+   save.
+
+On every push to the `main` branch the workflow runs the tests and publishes the
+site. Once the workflow completes, visit:
+
+```
+https://<your-user>.github.io/archeng-nexus/
+```
+
+Replace `<your-user>` with your GitHub username to see the deployed site.
+
 ## License
 
 This project is released under the MIT License.
