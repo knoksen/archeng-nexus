@@ -25,12 +25,17 @@ If you plan to use Node for dependency management, run:
 npm install
 ```
 
-The project currently has no automated tests. The `package.json` contains a
-placeholder test script that simply echoes a message when you run:
+### Running Tests
+
+This project uses [Jest](https://jestjs.io/) for unit testing. After
+installing dependencies you can run all tests with:
 
 ```bash
 npm test
 ```
+
+The included test checks that toggling the theme correctly updates
+`localStorage`.
 
 ## License
 
