@@ -521,6 +521,34 @@
                 </div>
             </div>
         </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-16 bg-white dark:bg-gray-900">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Contact Us</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+                        Have questions or want to get in touch? Send us a message.
+                    </p>
+                </div>
+                <form id="contact-form" class="max-w-2xl mx-auto space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200" for="name">Name</label>
+                        <input id="name" type="text" required class="mt-1 px-4 py-2 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200" for="email">Email</label>
+                        <input id="email" type="email" required class="mt-1 px-4 py-2 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200" for="message">Message</label>
+                        <textarea id="message" rows="4" required class="mt-1 px-4 py-2 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    </div>
+                    <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 transition">Send Message</button>
+                </form>
+                <p id="contact-success" class="mt-4 text-green-600 dark:text-green-400 text-center hidden">Thank you! We will be in touch soon.</p>
+            </div>
+        </section>
     </main>
 
     <!-- Footer -->
@@ -693,6 +721,19 @@
                 }
             });
         });
+
+        // Contact form submission
+        const contactForm = document.getElementById('contact-form');
+        const contactSuccess = document.getElementById('contact-success');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                if (contactSuccess) {
+                    contactSuccess.classList.remove('hidden');
+                }
+                contactForm.reset();
+            });
+        }
     </script>
 </body>
 </html>
