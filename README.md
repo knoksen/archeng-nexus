@@ -35,28 +35,35 @@ Then replace the CDN `<script>` with a link to the generated CSS file.
 
 ## Node Setup
 
-Install dependencies and run the demo API server:
+Install dependencies and start the demo Express server that handles contact form submissions:
 
 ```bash
 npm install
 npm start
 ```
 
+For CI environments, install dependencies with `npm ci` to ensure a clean
+and reproducible build.
 
 `npm start` launches `server/index.js` on port `3000`. Incoming contact form
 submissions will be printed to the console. The Express server now serves the
 repository's static files and enables CORS via the `cors` package so the
 `/api/contact` endpoint can be accessed from other origins.
 
+`npm start` launches `server/index.js` on port `3000`. Leave this process
+running while you test the site. Every time the contact form is submitted the
+details will be printed in this terminal window.
+
 ## Tests
 
-Run the automated test suite with:
+To run the automated test suite first install dependencies, then run the tests:
 
 ```bash
+npm install  # or npm ci
 npm test
 ```
 
-This uses Jest to verify the contact API responds correctly.
+Running `npm install` (or `npm ci`) installs Jest and other dev dependencies used by the tests.
 
 ## API
 
@@ -82,6 +89,11 @@ https://<your-user>.github.io/archeng-nexus/
 ```
 
 Replace `<your-user>` with your GitHub username to see the deployed site.
+
+GitHub Pages hosts only the static files under `index.html` and `scripts/`. The
+Express API server started with `npm start` is **not** deployed there. If you
+deploy to Pages without running your own server the contact form will appear but
+submissions will fail because the backend is missing.
 
 ## License
 
