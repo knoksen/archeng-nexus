@@ -44,7 +44,9 @@ npm start
 
 
 `npm start` launches `server/index.js` on port `3000`. Incoming contact form
-submissions will be printed to the console.
+submissions will be printed to the console. The Express server now serves the
+repository's static files and enables CORS via the `cors` package so the
+`/api/contact` endpoint can be accessed from other origins.
 
 ## Tests
 

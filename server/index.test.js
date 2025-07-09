@@ -9,4 +9,11 @@ describe('POST /api/contact', () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({ status: 'ok' });
   });
+
+  test('includes CORS headers', async () => {
+    const res = await request(app)
+      .post('/api/contact')
+      .send({ name: 'Test', email: 'test@example.com', message: 'hi' });
+    expect(res.headers['access-control-allow-origin']).toBe('*');
+  });
 });
