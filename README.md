@@ -2,7 +2,7 @@
 
 ArchEng Nexus is a prototype landing page for a next-generation architecture and engineering platform. The site showcases features like AI automation, sustainable materials, and integrated design tools.
 
-At the bottom of the page you'll find a simple contact form. Visitors can use it to send questions or project inquiries. The form currently displays a success message in the browser and can be hooked up to a backend service later.
+At the bottom of the page you'll find a simple contact form. It is fully client-side, so submissions never leave the browser. Use the example server in `server.js` or your own backend to capture messages.
 
 ## Running Locally
 
