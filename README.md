@@ -17,6 +17,22 @@ python3 -m http.server
 
 Then visit `http://localhost:8000` in your browser.
 
+## CDN Usage and Security
+
+The page pulls in Tailwind and Font Awesome via CDN. These tags now include
+Subresource Integrity (SRI) attributes and the Tailwind script loads using the
+`defer` attribute so it does not block rendering.
+
+If you prefer to avoid runtime CDN dependencies, you can install and bundle
+Tailwind locally:
+
+```bash
+npm install tailwindcss
+npx tailwindcss -i input.css -o output.css --minify
+```
+
+Then replace the CDN `<script>` with a link to the generated CSS file.
+
 ## Node Setup
 
 Install dependencies and run the demo API server:
