@@ -847,6 +847,8 @@
                 msg.textContent = 'Failed to load dynamic content. Showing default information.';
                 const main = document.querySelector('main');
                 if (main) main.prepend(msg);
+                // Optional alert for a more visible notification
+                alert('Unable to load site data. Some information may be missing.');
             });
     </script>
 </body>
