@@ -24,4 +24,28 @@ describe('POST /api/contact', () => {
   afterAll(() => {
     delete process.env.ALLOWED_ORIGINS;
   });
+
+  test('rejects invalid email', async () => {
+    const res = await request(app)
+      .post('/api/contact')
+      .send({ name: 'Test', email: 'invalid', message: 'hi' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined();
+  });
+
+  test('rejects missing name', async () => {
+    const res = await request(app)
+      .post('/api/contact')
+      .send({ email: 'test@example.com', message: 'hi' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined();
+  });
+
+  test('rejects empty message', async () => {
+    const res = await request(app)
+      .post('/api/contact')
+      .send({ name: 'Test', email: 'test@example.com', message: '' });
+    expect(res.statusCode).toBe(400);
+    expect(res.body.errors).toBeDefined();
+  });
 });
