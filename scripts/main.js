@@ -31,13 +31,17 @@
         
         // Update theme toggle icons
         function updateThemeIcons(theme) {
-            if (theme === 'dark') {
-                if (themeToggle) themeToggle.innerHTML = '<span aria-hidden="true" class="fas fa-sun text-yellow-400"></span>';
-                if (mobileThemeToggle) mobileThemeToggle.innerHTML = '<span aria-hidden="true" class="fas fa-sun text-yellow-400"></span>';
-            } else {
-                if (themeToggle) themeToggle.innerHTML = '<span aria-hidden="true" class="fas fa-moon text-gray-700"></span>';
-                if (mobileThemeToggle) mobileThemeToggle.innerHTML = '<span aria-hidden="true" class="fas fa-moon text-gray-700"></span>';
-            }
+            const iconClass = theme === 'dark'
+                ? 'fas fa-sun text-yellow-400'
+                : 'fas fa-moon text-gray-700';
+            [themeToggle, mobileThemeToggle].forEach(btn => {
+                if (!btn) return;
+                btn.textContent = '';
+                const span = document.createElement('span');
+                span.setAttribute('aria-hidden', 'true');
+                span.className = iconClass;
+                btn.appendChild(span);
+            });
         }
         
         // Add event listeners
@@ -55,11 +59,13 @@
                 mobileMenu.classList.toggle('open');
                 
                 // Update icon
-                if (!isExpanded) {
-                    mobileMenuButton.innerHTML = '<span aria-hidden="true" class="fas fa-times text-gray-700 dark:text-gray-200"></span>';
-                } else {
-                    mobileMenuButton.innerHTML = '<span aria-hidden="true" class="fas fa-bars text-gray-700 dark:text-gray-200"></span>';
-                }
+                mobileMenuButton.textContent = '';
+                const iconSpan = document.createElement('span');
+                iconSpan.setAttribute('aria-hidden', 'true');
+                iconSpan.className = !isExpanded
+                    ? 'fas fa-times text-gray-700 dark:text-gray-200'
+                    : 'fas fa-bars text-gray-700 dark:text-gray-200';
+                mobileMenuButton.appendChild(iconSpan);
             });
         }
         
@@ -116,102 +122,158 @@
             });
         }
 
+        // Insert site content into the DOM using safe APIs
+        function insertSiteInfo(data) {
+            document.getElementById('page-title').textContent = data.title;
+            const metaDesc = document.getElementById('meta-description');
+            if (metaDesc) metaDesc.setAttribute('content', data.description);
+
+            const featuresList = document.getElementById('features-list');
+            if (featuresList && Array.isArray(data.features)) {
+                featuresList.textContent = '';
+                data.features.forEach(f => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition card-hover';
+
+                    const iconWrap = document.createElement('div');
+                    iconWrap.className = `w-12 h-12 rounded-full ${f.iconBg} flex items-center justify-center mb-4`;
+                    const icon = document.createElement('i');
+                    icon.className = `${f.icon} ${f.iconColor} text-xl`;
+                    iconWrap.appendChild(icon);
+
+                    const title = document.createElement('h3');
+                    title.className = 'text-xl font-semibold text-gray-900 dark:text-white mb-2';
+                    title.textContent = f.title;
+
+                    const desc = document.createElement('p');
+                    desc.className = 'text-gray-600 dark:text-gray-300';
+                    desc.textContent = f.description;
+
+                    item.append(iconWrap, title, desc);
+                    featuresList.appendChild(item);
+                });
+            }
+
+            const materialsList = document.getElementById('materials-list');
+            if (materialsList && Array.isArray(data.materials)) {
+                materialsList.textContent = '';
+                data.materials.forEach(m => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition card-hover';
+
+                    const top = document.createElement('div');
+                    top.className = `h-40 bg-gradient-to-r ${m.gradient} flex items-center justify-center`;
+                    const topIcon = document.createElement('i');
+                    topIcon.className = `${m.icon} text-white text-5xl opacity-90`;
+                    top.appendChild(topIcon);
+
+                    const body = document.createElement('div');
+                    body.className = 'p-4';
+                    const title = document.createElement('h3');
+                    title.className = 'font-semibold text-gray-900 dark:text-white';
+                    title.textContent = m.title;
+                    const desc = document.createElement('p');
+                    desc.className = 'text-sm text-gray-600 dark:text-gray-300 mt-1';
+                    desc.textContent = m.description;
+                    const info = document.createElement('div');
+                    info.className = 'mt-3 flex items-center';
+                    const tag = document.createElement('span');
+                    tag.className = `text-xs px-2 py-1 ${m.tagColor} rounded-full`;
+                    tag.textContent = m.tag;
+                    const more = document.createElement('span');
+                    more.className = 'ml-auto text-sm text-indigo-600 dark:text-indigo-400';
+                    more.textContent = 'Learn more →';
+                    info.append(tag, more);
+
+                    body.append(title, desc, info);
+                    item.append(top, body);
+                    materialsList.appendChild(item);
+                });
+            }
+
+            const toolsList = document.getElementById('tools-list');
+            if (toolsList && Array.isArray(data.tools)) {
+                toolsList.textContent = '';
+                data.tools.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = 'flex items-start mb-6';
+
+                    const left = document.createElement('div');
+                    left.className = 'flex-shrink-0';
+                    const wrap = document.createElement('div');
+                    wrap.className = `flex items-center justify-center h-12 w-12 rounded-md ${t.bgColor} text-white`;
+                    const icon = document.createElement('i');
+                    icon.className = `${t.icon} text-xl`;
+                    wrap.appendChild(icon);
+                    left.appendChild(wrap);
+
+                    const right = document.createElement('div');
+                    right.className = 'ml-4';
+                    const title = document.createElement('h3');
+                    title.className = 'text-lg font-medium text-gray-900 dark:text-white';
+                    title.textContent = t.title;
+                    const desc = document.createElement('p');
+                    desc.className = 'mt-1 text-gray-600 dark:text-gray-300';
+                    desc.textContent = t.description;
+                    right.append(title, desc);
+
+                    item.append(left, right);
+                    toolsList.appendChild(item);
+                });
+            }
+
+            const solutionsList = document.getElementById('solutions-list');
+            if (solutionsList && Array.isArray(data.solutions)) {
+                solutionsList.textContent = '';
+                data.solutions.forEach(s => {
+                    const item = document.createElement('div');
+                    item.className = 'bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm hover:shadow-md transition card-hover';
+
+                    const header = document.createElement('div');
+                    header.className = 'flex items-center mb-4';
+                    const iconWrap = document.createElement('div');
+                    iconWrap.className = `flex-shrink-0 h-10 w-10 rounded-full ${s.iconBg} flex items-center justify-center`;
+                    const icon = document.createElement('i');
+                    icon.className = `${s.icon} ${s.iconColor}`;
+                    iconWrap.appendChild(icon);
+                    const title = document.createElement('h3');
+                    title.className = 'ml-3 text-lg font-medium text-gray-900 dark:text-white';
+                    title.textContent = s.title;
+                    header.append(iconWrap, title);
+
+                    const desc = document.createElement('p');
+                    desc.className = 'text-gray-600 dark:text-gray-300 mb-4';
+                    desc.textContent = s.description;
+
+                    const list = document.createElement('ul');
+                    list.className = 'space-y-2';
+                    s.bullets.forEach(b => {
+                        const li = document.createElement('li');
+                        li.className = 'flex items-start';
+                        const check = document.createElement('div');
+                        check.className = 'flex-shrink-0 h-5 w-5 text-green-500';
+                        const i = document.createElement('i');
+                        i.className = 'fas fa-check';
+                        check.appendChild(i);
+                        const text = document.createElement('p');
+                        text.className = 'ml-2 text-sm text-gray-600 dark:text-gray-300';
+                        text.textContent = b;
+                        li.append(check, text);
+                        list.appendChild(li);
+                    });
+
+                    item.append(header, desc, list);
+                    solutionsList.appendChild(item);
+                });
+            }
+        }
+
         // Load site content from JSON
-        fetch('data/site-info.json')
-            .then(res => res.json())
-            .then(data => {
-                // Page title and description
-                document.getElementById('page-title').textContent = data.title;
-                const metaDesc = document.getElementById('meta-description');
-                if (metaDesc) metaDesc.setAttribute('content', data.description);
-
-                // Features
-                const featuresList = document.getElementById('features-list');
-                if (featuresList && Array.isArray(data.features)) {
-                    featuresList.innerHTML = '';
-                    data.features.forEach(f => {
-                        const item = document.createElement('div');
-                        item.className = 'bg-gray-50 dark:bg-gray-800 rounded-xl p-6 shadow-sm hover:shadow-md transition card-hover';
-                        item.innerHTML = `
-                            <div class="w-12 h-12 rounded-full ${f.iconBg} flex items-center justify-center mb-4">
-                                <i class="${f.icon} ${f.iconColor} text-xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">${f.title}</h3>
-                            <p class="text-gray-600 dark:text-gray-300">${f.description}</p>`;
-                        featuresList.appendChild(item);
-                    });
-                }
-
-                // Materials
-                const materialsList = document.getElementById('materials-list');
-                if (materialsList && Array.isArray(data.materials)) {
-                    materialsList.innerHTML = '';
-                    data.materials.forEach(m => {
-                        const item = document.createElement('div');
-                        item.className = 'bg-white dark:bg-gray-900 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition card-hover';
-                        item.innerHTML = `
-                            <div class="h-40 bg-gradient-to-r ${m.gradient} flex items-center justify-center">
-                                <i class="${m.icon} text-white text-5xl opacity-90"></i>
-                            </div>
-                            <div class="p-4">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">${m.title}</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">${m.description}</p>
-                                <div class="mt-3 flex items-center">
-                                    <span class="text-xs px-2 py-1 ${m.tagColor} rounded-full">${m.tag}</span>
-                                    <span class="ml-auto text-sm text-indigo-600 dark:text-indigo-400">Learn more →</span>
-                                </div>
-                            </div>`;
-                        materialsList.appendChild(item);
-                    });
-                }
-
-                // Tools
-                const toolsList = document.getElementById('tools-list');
-                if (toolsList && Array.isArray(data.tools)) {
-                    toolsList.innerHTML = '';
-                    data.tools.forEach(t => {
-                        const item = document.createElement('div');
-                        item.className = 'flex items-start mb-6';
-                        item.innerHTML = `
-                            <div class="flex-shrink-0">
-                                <div class="flex items-center justify-center h-12 w-12 rounded-md ${t.bgColor} text-white">
-                                    <i class="${t.icon} text-xl"></i>
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-white">${t.title}</h3>
-                                <p class="mt-1 text-gray-600 dark:text-gray-300">${t.description}</p>
-                            </div>`;
-                        toolsList.appendChild(item);
-                    });
-                }
-
-                // Solutions
-                const solutionsList = document.getElementById('solutions-list');
-                if (solutionsList && Array.isArray(data.solutions)) {
-                    solutionsList.innerHTML = '';
-                    data.solutions.forEach(s => {
-                        const item = document.createElement('div');
-                        const bullets = s.bullets.map(b => `
-                            <li class="flex items-start">
-                                <div class="flex-shrink-0 h-5 w-5 text-green-500"><i class="fas fa-check"></i></div>
-                                <p class="ml-2 text-sm text-gray-600 dark:text-gray-300">${b}</p>
-                            </li>`).join('');
-                        item.className = 'bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm hover:shadow-md transition card-hover';
-                        item.innerHTML = `
-                            <div class="flex items-center mb-4">
-                                <div class="flex-shrink-0 h-10 w-10 rounded-full ${s.iconBg} flex items-center justify-center">
-                                    <i class="${s.icon} ${s.iconColor}"></i>
-                                </div>
-                                <h3 class="ml-3 text-lg font-medium text-gray-900 dark:text-white">${s.title}</h3>
-                            </div>
-                            <p class="text-gray-600 dark:text-gray-300 mb-4">${s.description}</p>
-                            <ul class="space-y-2">${bullets}</ul>`;
-                        solutionsList.appendChild(item);
-                    });
-                }
-            })
-            .catch(err => {
+        if (typeof window !== 'undefined') {
+            fetch('data/site-info.json')
+                .then(res => res.json())
+                .then(insertSiteInfo)
+                .catch(err => {
                 console.error('Failed to load site-info.json', err);
                 const msg = document.createElement('p');
                 msg.className = 'text-center text-red-600 mt-4';
@@ -220,4 +282,9 @@
                 if (main) main.prepend(msg);
                 // Optional alert for a more visible notification
                 alert('Unable to load site data. Some information may be missing.');
-            });
+                });
+        }
+
+        if (typeof module !== 'undefined' && module.exports) {
+            module.exports = { insertSiteInfo };
+        }
