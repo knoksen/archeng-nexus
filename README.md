@@ -19,14 +19,9 @@ Then visit `http://localhost:8000` in your browser.
 
 ## Node Setup
 
-If you plan to use Node for dependency management, run:
+The repository does not include a Node.js application. `package.json` only defines a few optional scripts. There are no dependencies, so you can skip `npm install` or run it with the `--offline` flag if desired.
 
-```bash
-npm install
-```
-
-The project currently has no automated tests. The `package.json` contains a
-placeholder test script that simply echoes a message when you run:
+Run the placeholder test script with:
 
 ```bash
 npm test
