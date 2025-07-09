@@ -19,21 +19,15 @@ Then visit `http://localhost:8000` in your browser.
 
 ## Node Setup
 
-If you plan to use Node for dependency management, run:
+The repository does not include a Node.js application. `package.json` only defines a few optional scripts. There are no dependencies, so you can skip `npm install` or run it with the `--offline` flag if desired.
 
-```bash
-npm install
-```
-
-### Example Contact Endpoint
-Install `express` (e.g., `npm install express`) and run `node server.js` to test form submissions locally. The sample server simply logs incoming JSON and returns a confirmation.
-
-The project currently has no automated tests. The `package.json` contains a
-placeholder test script that simply echoes a message when you run:
 
 ```bash
 npm test
 ```
+
+The included test checks that toggling the theme correctly updates
+`localStorage`.
 
 ## License
 
