@@ -45,6 +45,10 @@ npm start
 For CI environments, install dependencies with `npm ci` to ensure a clean
 and reproducible build.
 
+`npm start` launches `server/index.js` on port `3000`. Incoming contact form
+submissions will be printed to the console. The Express server now serves the
+repository's static files and enables CORS via the `cors` package so the
+`/api/contact` endpoint can be accessed from other origins.
 
 `npm start` launches `server/index.js` on port `3000`. Leave this process
 running while you test the site. Every time the contact form is submitted the
