@@ -2,7 +2,7 @@
 
 ArchEng Nexus is a prototype landing page for a next-generation architecture and engineering platform. The site showcases features like AI automation, sustainable materials, and integrated design tools.
 
-At the bottom of the page you'll find a simple contact form. It is fully client-side, so submissions never leave the browser. Use the example server in `server.js` or your own backend to capture messages.
+At the bottom of the page you'll find a simple contact form. Submissions are sent to the example Express server in `server/index.js` where they are logged to the console.
 
 ## Running Locally
 
@@ -19,15 +19,23 @@ Then visit `http://localhost:8000` in your browser.
 
 ## Node Setup
 
-The repository does not include a Node.js application. `package.json` only defines a few optional scripts. There are no dependencies, so you can skip `npm install` or run it with the `--offline` flag if desired.
-
+Install dependencies and run the demo API server:
 
 ```bash
-npm test
+npm install
+npm start
 ```
 
-The included test checks that toggling the theme correctly updates
-`localStorage`.
+
+`npm start` launches `server/index.js` on port `3000`. Incoming contact form
+submissions will be printed to the console. Run the tests with `npm test`.
+
+## API
+
+`POST /api/contact`
+
+Send a JSON payload with `name`, `email` and `message`. The server returns
+`{ "status": "ok" }` after logging the submission.
 
 ## License
 
