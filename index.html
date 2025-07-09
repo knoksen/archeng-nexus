@@ -457,12 +457,29 @@
         const contactForm = document.getElementById('contact-form');
         const contactSuccess = document.getElementById('contact-success');
         if (contactForm) {
-            contactForm.addEventListener('submit', function (e) {
+            contactForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                if (contactSuccess) {
-                    contactSuccess.classList.remove('hidden');
+                const data = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    message: document.getElementById('message').value
+                };
+                try {
+                    const res = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    if (res.ok) {
+                        if (contactSuccess) contactSuccess.classList.remove('hidden');
+                        contactForm.reset();
+                    } else {
+                        alert('Failed to send message.');
+                    }
+                } catch (err) {
+                    console.error('Error submitting contact form', err);
+                    alert('Failed to send message.');
                 }
-                contactForm.reset();
             });
         }
 
