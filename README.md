@@ -14,6 +14,21 @@ python3 -m http.server
 
 Then visit `http://localhost:8000`.
 
+## Node Setup
+
+If you plan to use Node for dependency management, run:
+
+```bash
+npm install
+```
+
+The project currently has no automated tests. The `package.json` contains a
+placeholder test script that simply echoes a message when you run:
+
+```bash
+npm test
+```
+
 ## License
 
 This project is released under the MIT License.
