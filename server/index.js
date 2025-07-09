@@ -6,7 +6,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/api/contact', (req, res) => {
   console.log('Contact form submission:', req.body);

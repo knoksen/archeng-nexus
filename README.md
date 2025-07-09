@@ -9,7 +9,7 @@ At the bottom of the page you'll find a simple contact form. Submissions are sen
 This site uses the browser's `fetch` API to load data. Browsers block `fetch`
 requests when the page is opened with the `file://` scheme. Run a local server
 so the page is served over `http://` or `https://` instead of opening
-`index.html` directly:
+`public/index.html` directly:
 
 ```bash
 python3 -m http.server
@@ -90,7 +90,8 @@ https://<your-user>.github.io/archeng-nexus/
 
 Replace `<your-user>` with your GitHub username to see the deployed site.
 
-GitHub Pages hosts only the static files under `index.html` and `scripts/`. The
+GitHub Pages hosts only the static files under `public/index.html` and
+`public/scripts/`. The
 Express API server started with `npm start` is **not** deployed there. If you
 deploy to Pages without running your own server the contact form will appear but
 submissions will fail because the backend is missing.
