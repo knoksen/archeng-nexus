@@ -11,7 +11,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, '../public')));
 
 app.post('/api/contact', (req, res) => {
   console.log('Contact form submission:', req.body);
