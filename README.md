@@ -28,7 +28,17 @@ npm start
 
 
 `npm start` launches `server/index.js` on port `3000`. Incoming contact form
-submissions will be printed to the console. Run the tests with `npm test`.
+submissions will be printed to the console.
+
+## Tests
+
+Run the automated test suite with:
+
+```bash
+npm test
+```
+
+This uses Jest to verify the contact API responds correctly.
 
 ## API
 
