@@ -1,4 +1,7 @@
 const request = require('supertest');
+
+// Configure allowed origins for tests
+process.env.ALLOWED_ORIGINS = 'http://allowed.com';
 const app = require('./index');
 
 describe('POST /api/contact', () => {
@@ -13,7 +16,12 @@ describe('POST /api/contact', () => {
   test('includes CORS headers', async () => {
     const res = await request(app)
       .post('/api/contact')
+      .set('Origin', 'http://allowed.com')
       .send({ name: 'Test', email: 'test@example.com', message: 'hi' });
-    expect(res.headers['access-control-allow-origin']).toBe('*');
+    expect(res.headers['access-control-allow-origin']).toBe('http://allowed.com');
+  });
+
+  afterAll(() => {
+    delete process.env.ALLOWED_ORIGINS;
   });
 });
