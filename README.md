@@ -49,13 +49,14 @@ details will be printed in this terminal window.
 
 ## Tests
 
-Run the automated test suite with:
+To run the automated test suite first install dependencies, then run the tests:
 
 ```bash
+npm install  # or npm ci
 npm test
 ```
 
-This uses Jest to verify the contact API responds correctly.
+Running `npm install` (or `npm ci`) installs Jest and other dev dependencies used by the tests.
 
 ## API
 
