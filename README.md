@@ -21,11 +21,13 @@ Then visit `http://localhost:8000` in your browser.
 
 The repository does not include a Node.js application. `package.json` only defines a few optional scripts. There are no dependencies, so you can skip `npm install` or run it with the `--offline` flag if desired.
 
-Run the placeholder test script with:
 
 ```bash
 npm test
 ```
+
+The included test checks that toggling the theme correctly updates
+`localStorage`.
 
 ## License
 
