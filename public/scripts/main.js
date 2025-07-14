@@ -107,18 +107,25 @@
                         if (contactSuccess) contactSuccess.classList.remove('hidden');
                         contactForm.reset();
                     } else {
-                        alert('Failed to send message.');
+                        const errorData = await res.json().catch(() => ({}));
+                        console.error('Contact form submission failed:', errorData);
+                        alert('Failed to send message. Please check your input and try again.');
                     }
                 } catch (err) {
                     console.error('Error submitting contact form', err);
-                    alert('Failed to send message.');
+                    alert('Failed to send message. Please check your connection and try again.');
                 }
             });
         }
 
         // Load site content from JSON
         fetch('data/site-info.json')
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+                }
+                return res.json();
+            })
             .then(data => {
                 // Page title and description
                 document.getElementById('page-title').textContent = data.title;
@@ -213,11 +220,9 @@
             })
             .catch(err => {
                 console.error('Failed to load site-info.json', err);
-                const msg = document.createElement('p');
-                msg.className = 'text-center text-red-600 mt-4';
-                msg.textContent = 'Failed to load dynamic content. Showing default information.';
+                const msg = document.createElement('div');
+                msg.className = 'text-center bg-yellow-50 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 p-3 rounded-md mb-4 mx-4';
+                msg.innerHTML = '<i class="fas fa-exclamation-triangle mr-2"></i>Some content could not be loaded. Please refresh the page.';
                 const main = document.querySelector('main');
                 if (main) main.prepend(msg);
-                // Optional alert for a more visible notification
-                alert('Unable to load site data. Some information may be missing.');
             });

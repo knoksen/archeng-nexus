@@ -23,9 +23,15 @@ jobs:
       - run: npm install
       - run: npm test
       
+      - name: Prepare deployment files
+        run: |
+          mkdir -p deploy-files
+          cp -r public/* deploy-files/
+          cp -r data deploy-files/
+      
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: deploy-files
 
   deploy:
     needs: build

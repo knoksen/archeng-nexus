@@ -45,6 +45,21 @@ npm start
 For CI environments, install dependencies with `npm ci` to ensure a clean
 and reproducible build.
 
+### Environment Variables
+
+Copy `.env.example` to `.env` and configure the following variables:
+
+- `PORT`: Server port (default: 3000)
+- `ALLOWED_ORIGINS`: Comma-separated list of allowed CORS origins for production
+- `NODE_ENV`: Environment (development, production, test)
+
+Example production configuration:
+```bash
+PORT=3000
+ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+NODE_ENV=production
+```
+
 `npm start` launches `server/index.js` on port `3000`. Incoming contact form
 submissions will be printed to the console. The Express server now serves the
 repository's static files and enables CORS via the `cors` package so the
@@ -74,6 +89,8 @@ Send a JSON payload with `name`, `email` and `message`. The server returns
 
 ## Deployment
 
+### GitHub Pages (Static Site Only)
+
 This repository includes a GitHub Actions workflow that deploys the static site
 to **GitHub Pages**. To enable it for your fork:
 
@@ -90,11 +107,23 @@ https://<your-user>.github.io/archeng-nexus/
 
 Replace `<your-user>` with your GitHub username to see the deployed site.
 
-GitHub Pages hosts only the static files under `public/index.html` and
-`public/scripts/`. The
-Express API server started with `npm start` is **not** deployed there. If you
-deploy to Pages without running your own server the contact form will appear but
+**Note:** GitHub Pages hosts only the static files. The Express API server is 
+**not** deployed there. If you deploy to Pages the contact form will appear but
 submissions will fail because the backend is missing.
+
+### Full Stack Deployment
+
+For a complete deployment including the Express server, consider platforms like:
+
+- **Heroku**: Create a `Procfile` with `web: node server/index.js`
+- **Railway**: Supports Node.js apps automatically
+- **Render**: Configure as a Node.js web service
+- **Digital Ocean App Platform**: Configure as a Node.js app
+
+Make sure to set the environment variables in your deployment platform:
+- `NODE_ENV=production`
+- `ALLOWED_ORIGINS=https://yourdomain.com`
+- `PORT` (usually auto-configured by the platform)
 
 ## License
 
