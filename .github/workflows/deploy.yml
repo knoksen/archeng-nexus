@@ -27,7 +27,6 @@ jobs:
         run: |
           mkdir -p deploy-files
           cp -r public/* deploy-files/
-          cp -r data deploy-files/
       
       - uses: actions/upload-pages-artifact@v3
         with:
