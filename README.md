@@ -2,9 +2,26 @@
 
 ArchEng Nexus is a prototype landing page for a next-generation architecture and engineering platform. The site showcases features like AI automation, sustainable materials, and integrated design tools.
 
+**🖥️ NEW: Now available as a desktop application for Windows 10!** See [DESKTOP.md](DESKTOP.md) for details.
+
 At the bottom of the page you'll find a simple contact form. Submissions are sent to the example Express server in `server/index.js` where they are logged to the console.
 
-## Running Locally
+## 🚀 Quick Start
+
+### Desktop Application
+
+Run as a native desktop application:
+
+```bash
+npm install
+npm run electron-dev  # Development mode
+# or
+npm run electron      # Production mode
+```
+
+For building Windows installers and more details, see [DESKTOP.md](DESKTOP.md).
+
+### Web Application (Browser)
 
 This site uses the browser's `fetch` API to load data. Browsers block `fetch`
 requests when the page is opened with the `file://` scheme. Run a local server
