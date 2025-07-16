@@ -148,11 +148,144 @@
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Powerful Features</h2>
                     <p class="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
-                        Designed to streamline your workflow and enhance creativity
+                        Designed to streamline your workflow and enhance creativity with cutting-edge technology
                     </p>
                 </div>
                 
+                <!-- Feature Statistics -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400" id="projects-count">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Active Projects</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-green-600 dark:text-green-400" id="users-count">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Active Users</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-purple-600 dark:text-purple-400" id="materials-count">0</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Materials Database</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 dark:text-blue-400" id="efficiency-count">0%</div>
+                        <div class="text-sm text-gray-600 dark:text-gray-300 mt-1">Efficiency Increase</div>
+                    </div>
+                </div>
+                
                 <div id="features-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                
+                <!-- Interactive Feature Demo -->
+                <div class="mt-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-8 text-white">
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold mb-4">See Our Platform in Action</h3>
+                        <p class="text-indigo-100 max-w-2xl mx-auto">
+                            Experience the power of our integrated design environment with this interactive preview
+                        </p>
+                    </div>
+                    
+                    <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
+                        <div class="flex flex-wrap justify-center gap-4 mb-6">
+                            <button class="demo-tab active px-4 py-2 rounded-lg bg-white/20 text-white font-medium transition hover:bg-white/30" data-demo="design">
+                                3D Design
+                            </button>
+                            <button class="demo-tab px-4 py-2 rounded-lg bg-white/10 text-white/70 font-medium transition hover:bg-white/20 hover:text-white" data-demo="analysis">
+                                Analysis
+                            </button>
+                            <button class="demo-tab px-4 py-2 rounded-lg bg-white/10 text-white/70 font-medium transition hover:bg-white/20 hover:text-white" data-demo="collaboration">
+                                Collaboration
+                            </button>
+                        </div>
+                        
+                        <div class="demo-content" id="demo-design">
+                            <div class="bg-gray-800 rounded-lg p-6 min-h-64 flex items-center justify-center">
+                                <div class="text-center">
+                                    <i class="fas fa-cube text-6xl text-blue-400 mb-4 animate-pulse"></i>
+                                    <h4 class="text-xl font-semibold text-white mb-2">Parametric 3D Modeling</h4>
+                                    <p class="text-gray-300">Create complex geometries with our intuitive drag-and-drop interface</p>
+                                    <div class="mt-4 flex justify-center space-x-2">
+                                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+                                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                                        <div class="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-content hidden" id="demo-analysis">
+                            <div class="bg-gray-800 rounded-lg p-6 min-h-64">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                                    <div class="flex flex-col justify-center">
+                                        <h4 class="text-xl font-semibold text-white mb-4">Real-time Performance Analysis</h4>
+                                        <div class="space-y-3">
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-gray-300">Structural Integrity</span>
+                                                <div class="flex items-center">
+                                                    <div class="w-24 h-2 bg-gray-600 rounded-full mr-2">
+                                                        <div class="w-20 h-2 bg-green-400 rounded-full"></div>
+                                                    </div>
+                                                    <span class="text-green-400">95%</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-gray-300">Energy Efficiency</span>
+                                                <div class="flex items-center">
+                                                    <div class="w-24 h-2 bg-gray-600 rounded-full mr-2">
+                                                        <div class="w-18 h-2 bg-blue-400 rounded-full"></div>
+                                                    </div>
+                                                    <span class="text-blue-400">88%</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex justify-between items-center">
+                                                <span class="text-gray-300">Cost Optimization</span>
+                                                <div class="flex items-center">
+                                                    <div class="w-24 h-2 bg-gray-600 rounded-full mr-2">
+                                                        <div class="w-16 h-2 bg-yellow-400 rounded-full"></div>
+                                                    </div>
+                                                    <span class="text-yellow-400">78%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-center">
+                                        <i class="fas fa-chart-line text-6xl text-green-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-content hidden" id="demo-collaboration">
+                            <div class="bg-gray-800 rounded-lg p-6 min-h-64 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="flex justify-center mb-4">
+                                        <div class="flex -space-x-2">
+                                            <div class="w-12 h-12 bg-blue-500 rounded-full border-2 border-white flex items-center justify-center">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                            <div class="w-12 h-12 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                            <div class="w-12 h-12 bg-purple-500 rounded-full border-2 border-white flex items-center justify-center">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4 class="text-xl font-semibold text-white mb-2">Real-time Collaboration</h4>
+                                    <p class="text-gray-300">Work together seamlessly with your team across the globe</p>
+                                    <div class="mt-4 text-sm text-gray-400">
+                                        <i class="fas fa-circle text-green-400 mr-1"></i> 3 users online
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <a href="#" class="inline-flex items-center px-6 py-3 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition">
+                            Start Free Trial
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -162,11 +295,111 @@
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Material Innovation</h2>
                     <p class="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
-                        Discover cutting-edge materials for your next project
+                        Discover cutting-edge materials for your next project with detailed specifications and sustainability metrics
                     </p>
                 </div>
                 
+                <!-- Material Filter -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="material-filter active px-4 py-2 rounded-full bg-indigo-600 text-white font-medium transition hover:bg-indigo-700" data-filter="all">
+                        All Materials
+                    </button>
+                    <button class="material-filter px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition hover:bg-gray-300 dark:hover:bg-gray-600" data-filter="sustainable">
+                        Sustainable
+                    </button>
+                    <button class="material-filter px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition hover:bg-gray-300 dark:hover:bg-gray-600" data-filter="energy">
+                        Energy+
+                    </button>
+                    <button class="material-filter px-4 py-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition hover:bg-gray-300 dark:hover:bg-gray-600" data-filter="innovative">
+                        Innovative
+                    </button>
+                </div>
+                
                 <div id="materials-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+                
+                <!-- Material Comparison Tool -->
+                <div class="mt-16 bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white text-center mb-8">
+                        Material Performance Comparison
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Environmental Impact</h4>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 dark:text-gray-300">Carbon Footprint</span>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-32 h-3 bg-gray-200 dark:bg-gray-700 rounded-full">
+                                            <div class="h-3 bg-green-500 rounded-full transition-all duration-1000" style="width: 75%"></div>
+                                        </div>
+                                        <span class="text-sm text-green-600 dark:text-green-400 font-medium">-25%</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 dark:text-gray-300">Recyclability</span>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-32 h-3 bg-gray-200 dark:bg-gray-700 rounded-full">
+                                            <div class="h-3 bg-blue-500 rounded-full transition-all duration-1000" style="width: 90%"></div>
+                                        </div>
+                                        <span class="text-sm text-blue-600 dark:text-blue-400 font-medium">90%</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 dark:text-gray-300">Durability</span>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-32 h-3 bg-gray-200 dark:bg-gray-700 rounded-full">
+                                            <div class="h-3 bg-purple-500 rounded-full transition-all duration-1000" style="width: 85%"></div>
+                                        </div>
+                                        <span class="text-sm text-purple-600 dark:text-purple-400 font-medium">50+ years</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Performance Metrics</h4>
+                            <div class="space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 dark:text-gray-300">Strength-to-Weight</span>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-32 h-3 bg-gray-200 dark:bg-gray-700 rounded-full">
+                                            <div class="h-3 bg-orange-500 rounded-full transition-all duration-1000" style="width: 95%"></div>
+                                        </div>
+                                        <span class="text-sm text-orange-600 dark:text-orange-400 font-medium">Excellent</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 dark:text-gray-300">Thermal Performance</span>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-32 h-3 bg-gray-200 dark:bg-gray-700 rounded-full">
+                                            <div class="h-3 bg-red-500 rounded-full transition-all duration-1000" style="width: 80%"></div>
+                                        </div>
+                                        <span class="text-sm text-red-600 dark:text-red-400 font-medium">Very Good</span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 dark:text-gray-300">Cost Effectiveness</span>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="w-32 h-3 bg-gray-200 dark:bg-gray-700 rounded-full">
+                                            <div class="h-3 bg-yellow-500 rounded-full transition-all duration-1000" style="width: 70%"></div>
+                                        </div>
+                                        <span class="text-sm text-yellow-600 dark:text-yellow-400 font-medium">Good</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4">
+                            Get detailed specifications and technical data sheets for any material
+                        </p>
+                        <button class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition">
+                            Request Material Samples
+                        </button>
+                    </div>
+                </div>
                 
                 <div class="mt-12 text-center">
                     <a href="#" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition">
@@ -259,25 +492,112 @@
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Contact Us</h2>
                     <p class="mt-4 max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
-                        Have questions or want to get in touch? Send us a message.
+                        Have questions or want to get in touch? Send us a message and we'll respond within 24 hours.
                     </p>
                 </div>
-                <form id="contact-form" class="max-w-2xl mx-auto space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200" for="name">Name</label>
-                        <input id="name" type="text" required class="mt-1 px-4 py-2 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                
+                <!-- Contact Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto">
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div class="w-12 h-12 mx-auto mb-4 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-clock text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Quick Response</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Average response time: 2 hours</p>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div class="w-12 h-12 mx-auto mb-4 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-green-600 dark:text-green-400"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Expert Support</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Direct access to our engineering team</p>
+                    </div>
+                    <div class="text-center p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <div class="w-12 h-12 mx-auto mb-4 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                            <i class="fas fa-shield-alt text-purple-600 dark:text-purple-400"></i>
+                        </div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Secure</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Your data is protected and encrypted</p>
+                    </div>
+                </div>
+
+                <form id="contact-form" class="max-w-2xl mx-auto space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2" for="name">
+                                Name <span class="text-red-500">*</span>
+                            </label>
+                            <input id="name" name="name" type="text" required 
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
+                                   placeholder="Your full name">
+                            <p id="name-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2" for="email">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input id="email" name="email" type="email" required 
+                                   class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
+                                   placeholder="your.email@example.com">
+                            <p id="email-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></p>
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200" for="email">Email</label>
-                        <input id="email" type="email" required class="mt-1 px-4 py-2 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2" for="subject">
+                            Subject
+                        </label>
+                        <input id="subject" name="subject" type="text" 
+                               class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
+                               placeholder="Brief description of your inquiry">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200" for="message">Message</label>
-                        <textarea id="message" rows="4" required class="mt-1 px-4 py-2 w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2" for="message">
+                            Message <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="message" name="message" rows="5" required 
+                                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200"
+                                  placeholder="Tell us about your project or question..."></textarea>
+                        <p id="message-error" class="mt-1 text-sm text-red-600 dark:text-red-400 hidden"></p>
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            <span id="message-count">0</span>/1000 characters
+                        </p>
                     </div>
-                    <button type="submit" class="w-full sm:w-auto px-6 py-3 bg-indigo-600 text-white rounded-md shadow hover:bg-indigo-700 transition">Send Message</button>
+                    
+                    <div class="flex items-center">
+                        <input id="consent" name="consent" type="checkbox" required 
+                               class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="consent" class="ml-2 block text-sm text-gray-700 dark:text-gray-200">
+                            I agree to the <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:underline">Privacy Policy</a> and <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:underline">Terms of Service</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" id="submit-btn" 
+                            class="w-full flex items-center justify-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed">
+                        <span id="submit-text">Send Message</span>
+                        <svg id="loading-spinner" class="hidden animate-spin ml-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
                 </form>
-                <p id="contact-success" class="mt-4 text-green-600 dark:text-green-400 text-center hidden" aria-live="polite">Thank you! We will be in touch soon.</p>
+                
+                <!-- Success Message -->
+                <div id="contact-success" class="mt-6 max-w-2xl mx-auto p-4 bg-green-50 dark:bg-green-900 border border-green-200 dark:border-green-700 rounded-lg text-center hidden" aria-live="polite">
+                    <div class="flex items-center justify-center mb-2">
+                        <i class="fas fa-check-circle text-green-600 dark:text-green-400 text-xl mr-2"></i>
+                        <h3 class="text-lg font-medium text-green-800 dark:text-green-200">Message Sent Successfully!</h3>
+                    </div>
+                    <p class="text-green-700 dark:text-green-300">Thank you for reaching out. We'll get back to you within 24 hours.</p>
+                </div>
+                
+                <!-- Error Message -->
+                <div id="contact-error" class="mt-6 max-w-2xl mx-auto p-4 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg text-center hidden" aria-live="polite">
+                    <div class="flex items-center justify-center mb-2">
+                        <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400 text-xl mr-2"></i>
+                        <h3 class="text-lg font-medium text-red-800 dark:text-red-200">Something went wrong</h3>
+                    </div>
+                    <p class="text-red-700 dark:text-red-300">Please check your connection and try again. If the problem persists, email us directly at <a href="mailto:support@archeng-nexus.com" class="underline">support@archeng-nexus.com</a></p>
+                </div>
             </div>
         </section>
     </main>
