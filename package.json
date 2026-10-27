@@ -7,8 +7,8 @@
   "scripts": {
     "test": "jest",
     "start": "node server/index.js",
-    "electron": "electron . --no-sandbox",
-    "electron-dev": "NODE_ENV=development electron . --no-sandbox",
+    "electron": "electron .",
+    "electron-dev": "electron .",
     "build": "electron-builder",
     "build-win": "electron-builder --win",
     "dist": "npm run build",
@@ -16,9 +16,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "^41.10.6",
+    "electron": "^45.1.0",
     "electron-builder": "^26.15.3",
     "jest": "^29.7.0",
     "jsdom": "^22.1.0",
@@ -39,10 +39,15 @@
     },
     "files": [
       "main.js",
+      "assets/**/*",
+      "desktop/**/*",
       "server/**/*",
       "public/**/*",
       "node_modules/**/*",
       "package.json"
+    ],
+    "asarUnpack": [
+      "server/**"
     ],
     "win": {
       "target": "nsis",

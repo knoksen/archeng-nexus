@@ -10,6 +10,8 @@ describe('Desktop Application', () => {
     expect(packageJson.scripts['electron-dev']).toBeDefined();
     expect(packageJson.scripts.build).toBeDefined();
     expect(packageJson.scripts['build-win']).toBeDefined();
+    expect(packageJson.scripts.electron).not.toContain('--no-sandbox');
+    expect(packageJson.scripts['electron-dev']).not.toContain('--no-sandbox');
   });
 
   test('should have required electron dependencies', () => {
@@ -27,6 +29,17 @@ describe('Desktop Application', () => {
     expect(mainContent).toContain('BrowserWindow');
     expect(mainContent).toContain('app.whenReady');
     expect(mainContent).toContain('startServer');
+    expect(mainContent).toContain('sandbox: true');
+    expect(mainContent).toContain('webSecurity: true');
+    expect(mainContent).not.toContain('setTimeout(loadApp');
+  });
+
+  test('package license matches the MIT license file', () => {
+    const packageJson = require('../package.json');
+    const license = fs.readFileSync(path.join(__dirname, '..', 'LICENSE'), 'utf8');
+
+    expect(packageJson.license).toBe('MIT');
+    expect(license).toContain('MIT License');
   });
 
   test('should have application icons', () => {

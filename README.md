@@ -4,7 +4,9 @@ ArchEng Nexus is a prototype landing page for a next-generation architecture and
 
 **🖥️ NEW: Now available as a desktop application for Windows 10!** See [DESKTOP.md](DESKTOP.md) for details.
 
-At the bottom of the page you'll find a simple contact form. Submissions are sent to the example Express server in `server/index.js` where they are logged to the console.
+At the bottom of the page you'll find a sample contact form. The example
+Express endpoint validates submissions and returns an acknowledgement; it does
+not deliver or persist messages.
 
 ## 🚀 Quick Start
 
@@ -13,7 +15,7 @@ At the bottom of the page you'll find a simple contact form. Submissions are sen
 Run as a native desktop application:
 
 ```bash
-npm install
+npm ci
 npm run electron-dev  # Development mode
 # or
 npm run electron      # Production mode
@@ -52,7 +54,7 @@ Then replace the CDN `<script>` with a link to the generated CSS file.
 
 ## Node Setup
 
-Install dependencies and start the demo Express server that handles contact form submissions:
+Install dependencies and start the demo Express server:
 
 ```bash
 npm install
@@ -68,23 +70,27 @@ Copy `.env.example` to `.env` and configure the following variables:
 
 - `PORT`: Server port (default: 3000)
 - `ALLOWED_ORIGINS`: Comma-separated list of allowed CORS origins for production
+- `TRUST_PROXY`: Set to `1` only behind one trusted reverse proxy
 - `NODE_ENV`: Environment (development, production, test)
 
 Example production configuration:
 ```bash
 PORT=3000
 ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+TRUST_PROXY=1
 NODE_ENV=production
 ```
 
-`npm start` launches `server/index.js` on port `3000`. Incoming contact form
-submissions will be printed to the console. The Express server now serves the
-repository's static files and enables CORS via the `cors` package so the
-`/api/contact` endpoint can be accessed from other origins.
+`npm start` launches `server/index.js` on port `3000` (or `PORT` if configured)
+and serves the static files. Contact submissions are not logged or persisted.
+Cross-origin access is denied unless each exact origin is listed in
+`ALLOWED_ORIGINS`; same-origin browser requests do not require CORS configuration.
+The contact endpoint limits the request body to 10 KB and allows up to five
+submissions per client IP in a 15-minute window.
 
-`npm start` launches `server/index.js` on port `3000`. Leave this process
-running while you test the site. Every time the contact form is submitted the
-details will be printed in this terminal window.
+Set `TRUST_PROXY=1` only when the server is behind exactly one trusted reverse
+proxy. It is disabled by default so clients cannot spoof their IP address for
+rate-limit decisions.
 
 ## Tests
 
@@ -101,8 +107,11 @@ Running `npm install` (or `npm ci`) installs Jest and other dev dependencies use
 
 `POST /api/contact`
 
-Send a JSON payload with `name`, `email` and `message`. The server returns
-`{ "status": "ok" }` after logging the submission.
+Send a JSON payload with string fields `name`, `email` and `message`. Name is
+limited to 100 characters and message to 1,000 characters. The server returns
+`{ "status": "ok" }` for valid input; this demo endpoint does not deliver or
+persist the message. Invalid input returns field-level messages without echoing
+submitted values.
 
 ## Deployment
 
@@ -115,8 +124,12 @@ to **GitHub Pages**. To enable it for your fork:
 2. Under **Build and deployment**, select **GitHub Actions** as the source and
    save.
 
-On every push to the `main` branch the workflow runs the tests and publishes the
-site. Once the workflow completes, visit:
+On pushes to `main`, the workflow tests the project and publishes the contents
+of `public/`. Pull requests run the checks but do not deploy. A separate legacy
+Jekyll Pages workflow is still configured; it is not changed by this foundation
+update to avoid altering existing Pages output.
+
+Once deployment completes, visit:
 
 ```
 https://<your-user>.github.io/archeng-nexus/
