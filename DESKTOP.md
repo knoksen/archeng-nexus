@@ -14,14 +14,14 @@ ArchEng Nexus is now available as a desktop application for Windows 10 and other
 
 ### Prerequisites
 
-- Node.js 16 or higher
+- Node.js 22 or higher
 - npm or yarn
 
 ### Setup
 
 1. Install dependencies:
 ```bash
-npm install
+npm ci
 ```
 
 2. Run in development mode:
@@ -30,9 +30,16 @@ npm run electron-dev
 ```
 
 This will:
-- Start the Express.js server on port 3000
+- Start the Express.js server on an available loopback port
 - Launch the Electron application
 - Open developer tools for debugging
+
+The desktop server binds only to `127.0.0.1`; it does not expose the local API
+to other devices on the network. It uses an ephemeral port by default, or the
+`PORT` environment variable when supplied. The application waits for an
+explicit server ready signal before loading the window. If the server cannot
+start, including an explicitly configured port conflict, the application
+reports the startup error instead of retrying on a timer.
 
 ### Building
 
@@ -70,7 +77,8 @@ The desktop application consists of:
 ### Main Process (`main.js`)
 - Manages the application lifecycle
 - Creates and manages browser windows
-- Starts the Express.js server as a child process
+- Starts the Express.js server as a child process and waits for readiness
+- Shuts down the child process through an IPC message when the app exits
 - Handles application menus and system integration
 
 ### Renderer Process
@@ -90,9 +98,11 @@ The desktop application includes several security measures:
 
 - **Context Isolation**: Enabled to prevent code injection
 - **Node Integration**: Disabled in renderer process
-- **Sandbox**: Configurable for different environments
-- **Content Security Policy**: Inherited from the web application
-- **External Link Handling**: Opens external links in default browser
+- **Sandbox**: Enabled in development and packaged builds
+- **Web Security**: Enabled; insecure content is not allowed
+- **External Link Handling**: Only valid HTTP(S) URLs without embedded credentials
+  are opened in the default browser; unsafe schemes are blocked
+- **Local Server**: Bound to loopback on a dynamically assigned port
 
 ## Windows-Specific Features
 
@@ -143,9 +153,9 @@ The desktop application is configured in `package.json` under the `build` sectio
 
 ### Common Issues
 
-1. **Port 3000 already in use**
-   - Close any other applications using port 3000
-   - The application will fail to start if the port is occupied
+1. **The application server cannot start**
+   - Check the displayed startup error and server output in the Electron console
+   - The desktop app uses an ephemeral port by default; `npm start` uses port 3000
 
 2. **Missing dependencies**
    - Run `npm install` to ensure all dependencies are installed
@@ -155,16 +165,26 @@ The desktop application is configured in `package.json` under the `build` sectio
    - Ensure you have the latest version of Node.js
    - Clear node_modules and reinstall: `rm -rf node_modules && npm install`
 
-4. **Sandbox issues in development**
-   - The application runs with `--no-sandbox` flag for compatibility
-   - This is normal for development environments
-
 ### Development Tips
 
 - Use `npm run electron-dev` for development with hot reloading
 - DevTools are automatically opened in development mode
-- Server logs appear in the Electron console
+- Non-sensitive server diagnostics appear in the Electron console
 - Use the View menu to access reload and developer tools
+
+### Tests
+
+Run the API, Electron security, and child-server lifecycle regression tests with:
+
+```bash
+npm ci
+npm test
+```
+
+The tests cover readiness signaling, clean shutdown, occupied-port reporting,
+URL scheme validation, CORS allowlisting, validation, payload size, and rate
+limiting. A Windows installer still needs to be built and exercised on Windows
+before claiming installer verification.
 
 ## Future Enhancements
 

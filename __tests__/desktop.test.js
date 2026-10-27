@@ -1,7 +1,6 @@
-const path = require('path');
-const fs = require('fs');
+const windowSecurityPreferences = require('../desktop/window-security');
 
-describe('Desktop Application', () => {
+describe('desktop application', () => {
   test('package.json should have electron scripts', () => {
     const packageJson = require('../package.json');
     
@@ -10,6 +9,8 @@ describe('Desktop Application', () => {
     expect(packageJson.scripts['electron-dev']).toBeDefined();
     expect(packageJson.scripts.build).toBeDefined();
     expect(packageJson.scripts['build-win']).toBeDefined();
+    expect(packageJson.scripts.electron).not.toContain('--no-sandbox');
+    expect(packageJson.scripts['electron-dev']).not.toContain('--no-sandbox');
   });
 
   test('should have required electron dependencies', () => {
@@ -19,22 +20,30 @@ describe('Desktop Application', () => {
     expect(packageJson.devDependencies['electron-builder']).toBeDefined();
   });
 
-  test('main.js should exist and be properly configured', () => {
-    const mainPath = path.join(__dirname, '..', 'main.js');
-    expect(fs.existsSync(mainPath)).toBe(true);
-    
-    const mainContent = fs.readFileSync(mainPath, 'utf8');
-    expect(mainContent).toContain('BrowserWindow');
-    expect(mainContent).toContain('app.whenReady');
-    expect(mainContent).toContain('startServer');
+  test('main process entry resolves', () => {
+    expect(require.resolve('../main.js')).toBeTruthy();
+  });
+
+  test('renderer uses least-privilege security preferences', () => {
+    expect(windowSecurityPreferences).toEqual({
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: true,
+      webSecurity: true,
+      allowRunningInsecureContent: false,
+      webviewTag: false,
+    });
+  });
+
+  test('package license matches the MIT license file', () => {
+    const packageJson = require('../package.json');
+    expect(packageJson.license).toBe('MIT');
+    expect(require.resolve('../LICENSE')).toBeTruthy();
   });
 
   test('should have application icons', () => {
-    const iconPng = path.join(__dirname, '..', 'assets', 'icon.png');
-    const iconIco = path.join(__dirname, '..', 'assets', 'icon.ico');
-    
-    expect(fs.existsSync(iconPng)).toBe(true);
-    expect(fs.existsSync(iconIco)).toBe(true);
+    expect(require.resolve('../assets/icon.png')).toBeTruthy();
+    expect(require.resolve('../assets/icon.ico')).toBeTruthy();
   });
 
   test('should have electron-builder configuration', () => {
@@ -45,5 +54,10 @@ describe('Desktop Application', () => {
     expect(packageJson.build.productName).toBe('ArchEng Nexus');
     expect(packageJson.build.win).toBeDefined();
     expect(packageJson.build.win.target).toBe('nsis');
+    expect(packageJson.build.asarUnpack).toEqual([
+      'server/**',
+      'public/**',
+      'node_modules/**',
+    ]);
   });
 });

@@ -1,87 +1,84 @@
-const { app, BrowserWindow, Menu } = require('electron');
+const { app, BrowserWindow, Menu, dialog, shell } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
-const isDev = process.env.NODE_ENV === 'development';
+const { startServer, stopServer } = require('./desktop/server-manager');
+const { isAllowedExternalUrl } = require('./desktop/url-security');
+const windowSecurityPreferences = require('./desktop/window-security');
+
+const isDev = !app.isPackaged || process.env.NODE_ENV === 'development';
 
 let mainWindow;
 let serverProcess;
+let isStoppingServer = false;
+let allowQuit = false;
+let quitRequested = false;
+let startupController;
 
-// Start the Express server as a child process
-function startServer() {
-  return new Promise((resolve, reject) => {
-    const serverPath = path.join(__dirname, 'server', 'index.js');
-    serverProcess = spawn('node', [serverPath], {
-      stdio: isDev ? 'inherit' : 'pipe',
-      env: { ...process.env, PORT: '3000' }
-    });
+function openExternalUrl(candidate) {
+  if (!isAllowedExternalUrl(candidate)) {
+    return;
+  }
 
-    serverProcess.on('error', (err) => {
-      console.error('Failed to start server:', err);
-      reject(err);
-    });
-
-    // Wait a moment for server to start
-    setTimeout(() => {
-      resolve();
-    }, 2000);
+  shell.openExternal(candidate).catch((error) => {
+    console.error('Failed to open external URL:', error.message);
   });
 }
 
-function createWindow() {
-  // Create the browser window
+function createWindow(baseUrl) {
   const iconPath = path.join(__dirname, 'assets', 'icon.png');
-  
+  const appOrigin = new URL(baseUrl).origin;
+
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     minWidth: 800,
     minHeight: 600,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      enableRemoteModule: false,
-      webSecurity: !isDev, // Disable web security in development
-      sandbox: false // Disable sandbox for compatibility
-    },
+    webPreferences: windowSecurityPreferences,
     icon: iconPath,
-    show: false, // Don't show until ready
-    titleBarStyle: 'default'
+    show: false,
+    titleBarStyle: 'default',
   });
 
-  // Load the app - wait a bit for server to start
-  const loadApp = () => {
-    mainWindow.loadURL('http://localhost:3000').catch(err => {
-      console.error('Failed to load app:', err);
-      // Try again after a longer delay
-      setTimeout(loadApp, 3000);
-    });
-  };
-  
-  setTimeout(loadApp, 2000);
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    openExternalUrl(url);
+    return { action: 'deny' };
+  });
 
-  // Show window when ready to prevent visual flash
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    let targetOrigin;
+    try {
+      targetOrigin = new URL(url).origin;
+    } catch {
+      event.preventDefault();
+      return;
+    }
+
+    if (targetOrigin === appOrigin) {
+      return;
+    }
+
+    event.preventDefault();
+    openExternalUrl(url);
+  });
+
+  mainWindow.loadURL(baseUrl).catch((error) => {
+    console.error('Failed to load application:', error.message);
+    dialog.showErrorBox('ArchEng Nexus failed to load', 'The local application server could not be reached.');
+    app.quit();
+  });
+
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
   });
 
-  // Handle window closed
-  mainWindow.on('closed', function () {
+  mainWindow.on('closed', () => {
     mainWindow = null;
   });
 
-  // Open DevTools in development
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
-
-  // Handle external links
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    require('electron').shell.openExternal(url);
-    return { action: 'deny' };
-  });
 }
 
-// Create application menu
 function createMenu() {
   const template = [
     {
@@ -90,11 +87,9 @@ function createMenu() {
         {
           label: 'Quit',
           accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
-          click: () => {
-            app.quit();
-          }
-        }
-      ]
+          click: () => app.quit(),
+        },
+      ],
     },
     {
       label: 'View',
@@ -107,15 +102,12 @@ function createMenu() {
         { role: 'zoomIn' },
         { role: 'zoomOut' },
         { type: 'separator' },
-        { role: 'togglefullscreen' }
-      ]
+        { role: 'togglefullscreen' },
+      ],
     },
     {
       label: 'Window',
-      submenu: [
-        { role: 'minimize' },
-        { role: 'close' }
-      ]
+      submenu: [{ role: 'minimize' }, { role: 'close' }],
     },
     {
       label: 'Help',
@@ -123,73 +115,104 @@ function createMenu() {
         {
           label: 'About ArchEng Nexus',
           click: () => {
-            require('electron').dialog.showMessageBox(mainWindow, {
+            dialog.showMessageBox(mainWindow, {
               type: 'info',
               title: 'About ArchEng Nexus',
               message: 'ArchEng Nexus',
-              detail: 'Next-generation architecture and engineering platform with AI automation and sustainable materials.'
+              detail: 'Next-generation architecture and engineering platform with AI automation and sustainable materials.',
             });
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   ];
 
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
-// App event handlers
 app.whenReady().then(async () => {
+  startupController = new AbortController();
   try {
-    await startServer();
-    createWindow();
+    const serverPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'app.asar.unpacked', 'server', 'index.js')
+      : path.join(__dirname, 'server', 'index.js');
+    const startedServer = await startServer({
+      serverPath,
+      host: '127.0.0.1',
+      port: process.env.PORT || 0,
+      signal: startupController.signal,
+    });
+
+    serverProcess = startedServer.child;
+    serverProcess.once('exit', (code, signal) => {
+      if (!allowQuit && !isStoppingServer) {
+        console.error(`Local application server stopped unexpectedly (code ${code}, signal ${signal}).`);
+        dialog.showErrorBox('ArchEng Nexus server stopped', 'The local application server stopped unexpectedly.');
+        app.quit();
+      }
+    });
+
+    createWindow(startedServer.url);
     createMenu();
-  } catch (err) {
-    console.error('Failed to start application:', err);
+  } catch (error) {
+    if (quitRequested && error.name === 'AbortError') {
+      return;
+    }
+
+    console.error('Failed to start application:', error.message);
+    dialog.showErrorBox('ArchEng Nexus failed to start', error.message);
+    app.quit();
+  } finally {
+    startupController = null;
+    if (quitRequested && !serverProcess) {
+      allowQuit = true;
+      app.quit();
+    }
+  }
+});
+
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0 && serverProcess) {
+    createWindow(`http://127.0.0.1:${serverProcess.archengPort}`);
+  }
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
-
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
 });
 
-// Quit when all windows are closed, except on macOS
-app.on('window-all-closed', function () {
-  // Kill the server process
-  if (serverProcess && !serverProcess.killed) {
-    serverProcess.kill();
+app.on('before-quit', (event) => {
+  if (!serverProcess || allowQuit) {
+    return;
   }
-  
-  if (process.platform !== 'darwin') app.quit();
-});
 
-app.on('before-quit', () => {
-  // Kill the server process when quitting
-  if (serverProcess && !serverProcess.killed) {
-    serverProcess.kill();
+  event.preventDefault();
+  if (isStoppingServer) {
+    return;
   }
-});
 
-// Security: Prevent new window creation
-app.on('web-contents-created', (event, contents) => {
-  contents.on('new-window', (event, navigationUrl) => {
-    event.preventDefault();
-    require('electron').shell.openExternal(navigationUrl);
-  });
-});
-
-// Handle certificate errors
-app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
-  if (isDev) {
-    // In development, ignore certificate errors
-    event.preventDefault();
-    callback(true);
-  } else {
-    // In production, use default behavior
-    callback(false);
+  quitRequested = true;
+  isStoppingServer = true;
+  if (!serverProcess && startupController) {
+    startupController.abort();
+    return;
   }
+
+  if (!serverProcess) {
+    allowQuit = true;
+    app.quit();
+    return;
+  }
+
+  stopServer(serverProcess)
+    .catch((error) => {
+      console.error('Failed to stop local application server cleanly:', error.message);
+    })
+    .finally(() => {
+      serverProcess = null;
+      allowQuit = true;
+      app.quit();
+    });
 });

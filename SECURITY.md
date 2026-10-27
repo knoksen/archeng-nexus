@@ -2,20 +2,19 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+This project is currently a prototype. Security fixes are applied to the
+current default branch; no older release support window is promised.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+Please report suspected vulnerabilities privately through GitHub's security
+advisory feature for this repository, if available. If private reporting is not
+enabled, contact the repository maintainers directly rather than posting
+exploit details in a public issue. Include the affected version or commit and
+reproduction steps; do not include real user data or credentials.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+The desktop app starts its HTTP server on loopback with an ephemeral port,
+enables Electron sandboxing and web security, and opens only validated HTTP(S)
+external links. The demo contact endpoint does not persist or log submissions.
+These controls do not replace a security review before a production backend
+stores or delivers contact data.
