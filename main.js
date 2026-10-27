@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, dialog, shell } = require('electron');
 const path = require('path');
 const { startServer, stopServer } = require('./desktop/server-manager');
 const { isAllowedExternalUrl } = require('./desktop/url-security');
+const windowSecurityPreferences = require('./desktop/window-security');
 
 const isDev = !app.isPackaged || process.env.NODE_ENV === 'development';
 
@@ -9,6 +10,8 @@ let mainWindow;
 let serverProcess;
 let isStoppingServer = false;
 let allowQuit = false;
+let quitRequested = false;
+let startupController;
 
 function openExternalUrl(candidate) {
   if (!isAllowedExternalUrl(candidate)) {
@@ -29,14 +32,7 @@ function createWindow(baseUrl) {
     height: 800,
     minWidth: 800,
     minHeight: 600,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      sandbox: true,
-      webSecurity: true,
-      allowRunningInsecureContent: false,
-      webviewTag: false,
-    },
+    webPreferences: windowSecurityPreferences,
     icon: iconPath,
     show: false,
     titleBarStyle: 'default',
@@ -135,6 +131,7 @@ function createMenu() {
 }
 
 app.whenReady().then(async () => {
+  startupController = new AbortController();
   try {
     const serverPath = app.isPackaged
       ? path.join(process.resourcesPath, 'app.asar.unpacked', 'server', 'index.js')
@@ -143,6 +140,7 @@ app.whenReady().then(async () => {
       serverPath,
       host: '127.0.0.1',
       port: process.env.PORT || 0,
+      signal: startupController.signal,
     });
 
     serverProcess = startedServer.child;
@@ -157,9 +155,19 @@ app.whenReady().then(async () => {
     createWindow(startedServer.url);
     createMenu();
   } catch (error) {
+    if (quitRequested && error.name === 'AbortError') {
+      return;
+    }
+
     console.error('Failed to start application:', error.message);
     dialog.showErrorBox('ArchEng Nexus failed to start', error.message);
     app.quit();
+  } finally {
+    startupController = null;
+    if (quitRequested && !serverProcess) {
+      allowQuit = true;
+      app.quit();
+    }
   }
 });
 
@@ -185,7 +193,19 @@ app.on('before-quit', (event) => {
     return;
   }
 
+  quitRequested = true;
   isStoppingServer = true;
+  if (!serverProcess && startupController) {
+    startupController.abort();
+    return;
+  }
+
+  if (!serverProcess) {
+    allowQuit = true;
+    app.quit();
+    return;
+  }
+
   stopServer(serverProcess)
     .catch((error) => {
       console.error('Failed to stop local application server cleanly:', error.message);

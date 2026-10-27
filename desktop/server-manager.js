@@ -11,9 +11,14 @@ function startServer({
   startupTimeoutMs = 10000,
   executable = process.execPath,
   environment = process.env,
+  signal,
 } = {}) {
   if (!serverPath) {
     return Promise.reject(new TypeError('serverPath is required to start the application server.'));
+  }
+
+  if (signal && signal.aborted) {
+    return Promise.reject(createAbortError());
   }
 
   const child = spawn(executable, [serverPath], {
@@ -42,6 +47,9 @@ function startServer({
 
     function finish() {
       clearTimeout(startupTimer);
+      if (signal) {
+        signal.removeEventListener('abort', onAbort);
+      }
     }
 
     function fail(error) {
@@ -53,6 +61,10 @@ function startServer({
       finish();
       child.kill();
       reject(error);
+    }
+
+    function onAbort() {
+      fail(createAbortError());
     }
 
     child.once('error', (error) => {
@@ -121,7 +133,21 @@ function startServer({
         }
       }
     });
+
+    if (signal) {
+      signal.addEventListener('abort', onAbort, { once: true });
+      if (signal.aborted) {
+        onAbort();
+      }
+    }
   });
+}
+
+function createAbortError() {
+  const error = new Error('Application server startup was cancelled.');
+  error.name = 'AbortError';
+  error.code = 'ABORT_ERR';
+  return error;
 }
 
 function stopServer(child, shutdownTimeoutMs = 5000) {

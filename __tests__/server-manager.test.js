@@ -42,4 +42,20 @@ describe('desktop server lifecycle', () => {
       });
     }
   });
+
+  test('cancels a server process that has not reported readiness', async () => {
+    const controller = new AbortController();
+    const startup = startServer({
+      serverPath,
+      port: 0,
+      signal: controller.signal,
+    });
+
+    controller.abort();
+
+    await expect(startup).rejects.toMatchObject({
+      name: 'AbortError',
+      code: 'ABORT_ERR',
+    });
+  });
 });
