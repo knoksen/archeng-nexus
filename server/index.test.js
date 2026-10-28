@@ -41,6 +41,16 @@ describe('POST /api/contact', () => {
     expect(res.body).toEqual({ status: 'ok' });
   });
 
+  test.each([
+    ['/health/live', { status: 'live' }],
+    ['/health/ready', { status: 'ready' }],
+  ])('exposes non-sensitive health status at %s', async (path, expectedBody) => {
+    const res = await request(app).get(path);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual(expectedBody);
+  });
+
   test('does not trust forwarded IP headers by default', () => {
     expect(app.get('trust proxy')).toBe(false);
   });

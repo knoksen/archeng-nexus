@@ -8,6 +8,20 @@ const { body, validationResult } = require('express-validator');
 const READY_MARKER = 'ARCHENG_SERVER_READY ';
 const ERROR_MARKER = 'ARCHENG_SERVER_ERROR ';
 
+function registerHealthRoutes(app) {
+  app.get('/health', (req, res) => {
+    res.json({ status: 'ok' });
+  });
+
+  app.get('/health/live', (req, res) => {
+    res.json({ status: 'live' });
+  });
+
+  app.get('/health/ready', (req, res) => {
+    res.json({ status: 'ready' });
+  });
+}
+
 function createApp({ allowedOrigins } = {}) {
   const app = express();
   const configuredOrigins = allowedOrigins || (process.env.ALLOWED_ORIGINS
@@ -45,6 +59,7 @@ function createApp({ allowedOrigins } = {}) {
   }));
   app.use(express.json({ limit: '10kb' }));
   app.use(express.static(path.join(__dirname, '../public')));
+  registerHealthRoutes(app);
 
   const contactLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
@@ -52,10 +67,6 @@ function createApp({ allowedOrigins } = {}) {
     message: { error: 'Too many contact form submissions, please try again later.' },
     standardHeaders: true,
     legacyHeaders: false,
-  });
-
-  app.get('/health', (req, res) => {
-    res.json({ status: 'ok' });
   });
 
   app.post(
