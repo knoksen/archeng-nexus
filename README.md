@@ -117,17 +117,22 @@ submitted values.
 
 ### GitHub Pages (Static Site Only)
 
-This repository includes a GitHub Actions workflow that deploys the static site
-to **GitHub Pages**. To enable it for your fork:
+The single authoritative GitHub Pages pipeline is
+`.github/workflows/deploy.yml`. It runs tests, builds the repository-root
+Jekyll site, and checks that the `public/` subtree is included unchanged.
+Pull requests run the build and validation but do not deploy. The root build
+preserves the currently published documentation at `/` and keeps the
+application under `/public/`.
+
+To enable Pages for your fork:
 
 1. Open your repository's **Settings** and navigate to **Pages**.
 2. Under **Build and deployment**, select **GitHub Actions** as the source and
    save.
 
-On pushes to `main`, the workflow tests the project and publishes the contents
-of `public/`. Pull requests run the checks but do not deploy. A separate legacy
-Jekyll Pages workflow is still configured; it is not changed by this foundation
-update to avoid altering existing Pages output.
+On pushes to `main`, the workflow tests and validates the Pages artifact before
+deployment. See [DEPLOYMENT.md](DEPLOYMENT.md) for the artifact comparison and
+rollback procedure.
 
 Once deployment completes, visit:
 
@@ -151,6 +156,7 @@ For a complete deployment including the Express server, consider platforms like:
 - **Digital Ocean App Platform**: Configure as a Node.js app
 
 Make sure to set the environment variables in your deployment platform:
+
 - `NODE_ENV=production`
 - `ALLOWED_ORIGINS=https://yourdomain.com`
 - `PORT` (usually auto-configured by the platform)

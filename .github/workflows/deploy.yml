@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,15 +25,24 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      
-      - name: Prepare deployment files
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Build current root Pages site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Validate published routes and public subtree
         run: |
-          mkdir -p deploy-files
-          cp -r public/* deploy-files/
-      
+          test -f _site/index.html
+          test -f _site/SECURITY.html
+          test -f _site/DESKTOP.html
+          test -f _site/assets/index.html
+          diff -r public _site/public
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: deploy-files
+          path: _site
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -42,6 +55,5 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/configure-pages@v5
       - id: deployment
         uses: actions/deploy-pages@v4
