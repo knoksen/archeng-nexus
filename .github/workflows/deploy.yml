@@ -10,13 +10,18 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    # configure-pages reads the Pages site configuration through the API.
+    permissions:
+      contents: read
+      pages: read
+    # One build per ref. A newer push to the same pull request replaces an older
+    # PR build; builds for main are never cancelled and never share a group with PRs.
+    concurrency:
+      group: pages-build-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -51,6 +56,11 @@ jobs:
     permissions:
       pages: write
       id-token: write
+    # Only deploy runs take the production lock, so pull-request validation can
+    # never replace a queued production deployment.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

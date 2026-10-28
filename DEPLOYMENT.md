@@ -5,8 +5,11 @@
 `.github/workflows/deploy.yml` is the only workflow that deploys to GitHub
 Pages. Pull requests run dependency installation, tests, and site validation;
 the deploy job is skipped for pull requests. Pushes to `main` and manually
-started runs can deploy. The `pages` concurrency group prevents overlapping
-deployments.
+started runs can deploy. Only the deploy job holds the `pages-deploy`
+concurrency lock (never cancelled), so pull-request validation cannot replace a
+queued production deployment. Builds use a per-ref group; newer pushes to the
+same pull request cancel the older PR build. The build job has `pages: read`
+because `actions/configure-pages` reads the Pages configuration.
 
 The workflow builds the repository root with the same Jekyll Pages action and
 source used by the previously successful `jekyll-gh-pages.yml` workflow. This
