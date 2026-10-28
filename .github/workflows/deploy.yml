@@ -13,6 +13,15 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # configure-pages reads the Pages site configuration through the API.
+    permissions:
+      contents: read
+      pages: read
+    # One build per ref. A newer push to the same pull request replaces an older
+    # PR build; builds for main are never cancelled and never share a group with PRs.
+    concurrency:
+      group: pages-build-${{ github.ref }}
+      cancel-in-progress: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,15 +30,24 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      
-      - name: Prepare deployment files
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Build current root Pages site
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Validate published routes and public subtree
         run: |
-          mkdir -p deploy-files
-          cp -r public/* deploy-files/
-      
+          test -f _site/index.html
+          test -f _site/SECURITY.html
+          test -f _site/DESKTOP.html
+          test -f _site/assets/index.html
+          diff -r public _site/public
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: deploy-files
+          path: _site
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -38,10 +56,14 @@ jobs:
     permissions:
       pages: write
       id-token: write
+    # Only deploy runs take the production lock, so pull-request validation can
+    # never replace a queued production deployment.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/configure-pages@v5
       - id: deployment
         uses: actions/deploy-pages@v4
